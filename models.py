@@ -53,26 +53,12 @@ class Artist(db.Model):
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
-# TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
-
 class Show(db.Model):
     __tablename__ = 'show'
 
     id = db.Column(db.Integer, primary_key=True)
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'), nullable=False)
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
-    start_time = db.Column('start_time', db.DateTime, nullable=False, default=datetime.utcnow)
-
-class VenueGenre(db.Model):
-    __tablename__ = 'venue_genre'
-
-    id = db.Column(db.Integer, primary_key=True)
-    venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'), nullable=False)
-
-class ArtistGenre(db.Model):
-    __tablename__ = 'artist_genre'
-
-    id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
+    start_time = db.Column('start_time', db.DateTime())
 
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
