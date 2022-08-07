@@ -1,7 +1,7 @@
 const deleteVenue = document.getElementById("delete-venue");
 deleteVenue.onclick = function (e) {
   venueId = e.target.dataset.id;
-  console.log("delete Clicked");
+  console.log("delete clicked");
   console.log(venueId);
   fetch(`/venues/${venueId}`, {
     method: "DELETE",

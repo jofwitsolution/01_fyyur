@@ -178,17 +178,38 @@ def show_venue(venue_id):
   if venue is None:
     abort(404)
 
-  current_time = datetime.now()
-  upcoming_shows = db.session.query(Artist.name, Artist.id, Artist.image_link, Show.start_time).filter((Show.venue_id == venue_id) & (Show.artist_id == Artist.id) & (Show.start_time > current_time)).all()
-  past_shows = db.session.query(Artist.name, Artist.id, Artist.image_link, Show.start_time).filter((Show.venue_id == venue_id) & (Show.artist_id == Artist.id) & (Show.start_time < current_time)).all()
+  # current_time = datetime.now()
+  # upcoming_shows = db.session.query(Artist.name, Artist.id, Artist.image_link, Show.start_time).filter((Show.venue_id == venue_id) & (Show.artist_id == Artist.id) & (Show.start_time > current_time)).all()
+  # past_shows = db.session.query(Artist.name, Artist.id, Artist.image_link, Show.start_time).filter((Show.venue_id == venue_id) & (Show.artist_id == Artist.id) & (Show.start_time < current_time)).all()
 
-  venue.upcoming_shows = upcoming_shows
+  # venue.upcoming_shows = upcoming_shows
+  # venue.past_shows = past_shows
+  # venue.past_shows_count = len(past_shows)
+  # venue.upcoming_shows_count = len(upcoming_shows)
+  # # split string to a list
+  # venue.genres = venue.genres.split(',')  
+
+  past_shows_query = db.session.query(Show).join(Artist).filter(Show.venue_id==venue_id).filter(Show.start_time<datetime.now()).all()
+  upcoming_shows_query = db.session.query(Show).join(Artist).filter(Show.venue_id==venue_id).filter(Show. start_time>datetime.now()).all()
+
+  past_shows = []
+  for show in past_shows_query:
+    show_venue = Artist.query.get(show.artist_id)
+    show_venue.start_time = show.start_time
+    past_shows.append(show_venue)
+
+  upcoming_shows = []
+  for show in upcoming_shows_query:
+    show_venue = Artist.query.get(show.artist_id)
+    show_venue.start_time = show.start_time
+    upcoming_shows.append(show_venue)
+
   venue.past_shows = past_shows
+  venue.upcoming_shows = upcoming_shows
   venue.past_shows_count = len(past_shows)
   venue.upcoming_shows_count = len(upcoming_shows)
   # split string to a list
-  venue.genres = venue.genres.split(',')  
-
+  venue.genres = venue.genres.split(',')
   return render_template('pages/show_venue.html', venue=venue)
 
 #  Update Venue
@@ -370,23 +391,46 @@ def show_artist(artist_id):
   # TODO: replace with real artist data from the artist table, using artist_id
 
   artist = Artist.query.get(artist_id)
-  print(artist)
+  # print(artist)
 
   if artist is None:
     abort(404)
 
-  current_time = datetime.now()
-  upcoming_shows = db.session.query(Venue.name, Venue.id, Venue.image_link, Show.start_time).filter((Show.artist_id == artist_id) & (Show.venue_id == Venue.id) & (Show.start_time > current_time)).all()
-  past_shows = db.session.query(Venue.name, Venue.id, Venue.image_link, Show.start_time).filter((Show.artist_id == artist_id) & (Show.venue_id == Artist.id) & (Show.start_time < current_time)).all()
+  # current_time = datetime.now()
+  # upcoming_shows = db.session.query(Venue.name, Venue.id, Venue.image_link, Show.start_time).filter((Show.artist_id == artist_id) & (Show.venue_id == Venue.id) & (Show.start_time > current_time)).all()
+  # past_shows = db.session.query(Venue.name, Venue.id, Venue.image_link, Show.start_time).filter((Show.artist_id == artist_id) & (Show.venue_id == Artist.id) & (Show.start_time < current_time)).all()
+  
+  # print(past_shows)
+  # print(upcoming_shows)
+  # artist.upcoming_shows = upcoming_shows
+  # artist.past_shows = past_shows
+  # artist.past_shows_count = len(past_shows)
+  # artist.upcoming_shows_count = len(upcoming_shows)
+  # # split string to a list
+  # artist.genres = artist.genres.split(',')
 
-  print(past_shows)
-  artist.upcoming_shows = upcoming_shows
+  past_shows_query = db.session.query(Show).join(Venue).filter(Show.artist_id==artist_id).filter(Show.start_time<datetime.now()).all()
+  upcoming_shows_query = db.session.query(Show).join(Venue).filter(Show.artist_id==artist_id).filter(Show. start_time>datetime.now()).all()
+
+  past_shows = []
+  for show in past_shows_query:
+    show_venue = Venue.query.get(show.venue_id)
+    show_venue.start_time = show.start_time
+    past_shows.append(show_venue)
+
+  upcoming_shows = []
+  for show in upcoming_shows_query:
+    show_venue = Venue.query.get(show.venue_id)
+    show_venue.start_time = show.start_time
+    upcoming_shows.append(show_venue)
+
   artist.past_shows = past_shows
+  artist.upcoming_shows = upcoming_shows
   artist.past_shows_count = len(past_shows)
   artist.upcoming_shows_count = len(upcoming_shows)
   # split string to a list
   artist.genres = artist.genres.split(',')
-  
+
   return render_template('pages/show_artist.html', artist=artist)
 
 #  Update Artist
